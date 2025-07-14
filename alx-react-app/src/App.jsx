@@ -6,6 +6,7 @@ import WelcomeMessage from './components/WelcomeMessage'
 import Header from './components/Header'
 import MainContent from './components/MainContent'
 import Footer from './components/Footer'
+import UserProfile from './components/UserProfile' // ✅ New import
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,7 +22,6 @@ function App() {
         </a>
       </div>
 
-      {/* Previously added component */}
       <WelcomeMessage />
 
       <h1>Vite + React</h1>
@@ -32,10 +32,16 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
 
-      {/* NEW Components for Task 2 */}
       <Header />
       <MainContent />
       <Footer />
+
+      {/* ✅ New Component Rendered with Props */}
+      <UserProfile
+        name="Alice"
+        age="25"
+        bio="Loves hiking and photography"
+      />
     </>
   )
 }
