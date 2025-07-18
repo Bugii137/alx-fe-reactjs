@@ -1,9 +1,9 @@
-function Footer() {
+function MainContent() {
   return (
-    <footer style={{ backgroundColor: '#222', color: 'white', textAlign: 'center', padding: '10px' }}>
-      <p>© 2023 City Lovers</p>
-    </footer>
+    <main>
+      <p>I love to visit New York, Paris, and Tokyo.</p>
+    </main>
   );
 }
 
-export default Footer;
+export default MainContent;
