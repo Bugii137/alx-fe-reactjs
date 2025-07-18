@@ -1,9 +1,9 @@
-function MainContent() {
+function Footer() {
   return (
-    <main style={{ padding: '15px', backgroundColor: '#f5f5f5', fontSize: '16px' }}>
-      <p>I love to visit New York, Paris, and Tokyo.</p>
-    </main>
+    <footer style={{ backgroundColor: '#222', color: 'white', textAlign: 'center', padding: '10px' }}>
+      <p>© 2023 City Lovers</p>
+    </footer>
   );
 }
 
-export default MainContent;
+export default Footer;
