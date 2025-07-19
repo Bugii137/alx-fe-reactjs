@@ -1,16 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import WelcomeMessage from './components/WelcomeMessage'
-import Header from './components/Header'
-import MainContent from './components/MainContent'
-import Footer from './components/Footer'
-import UserProfile from './components/UserProfile' // ✅ New import
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
+import WelcomeMessage from './components/WelcomeMessage';
+import Header from './components/Header';
+import MainContent from './components/MainContent';
+import Footer from './components/Footer';
+import UserProfile from './components/UserProfile';
+import Counter from './components/Counter'; // ✅ Importing the new Counter component
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <div>
@@ -34,16 +32,18 @@ function App() {
 
       <Header />
       <MainContent />
-      <Footer />
-
-      {/* ✅ New Component Rendered with Props */}
       <UserProfile
         name="Alice"
         age="25"
         bio="Loves hiking and photography"
       />
+
+      {/* ✅ Counter component now rendered */}
+      <Counter />
+
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
