@@ -1,10 +1,8 @@
-function UserDetails({ userData }) {
-  return (
-    <div>
-      <p>Name: {userData.name}</p>
-      <p>Email: {userData.email}</p>
-    </div>
-  );
+import React from 'react';
+import UserInfo from './UserInfo';
+
+function ProfilePage() {
+  return <UserInfo />;
 }
 
-export default UserDetails;
+export default ProfilePage;
