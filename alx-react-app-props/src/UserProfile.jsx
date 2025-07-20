@@ -1,5 +1,4 @@
-// alx-react-app-props/src/UserProfile.jsx
-
+// src/UserProfile.jsx
 import { useContext } from 'react';
 import UserContext from './UserContext';
 
