@@ -2,9 +2,11 @@ import ProfilePage from './components/ProfilePage';
 import UserContext from './UserContext';
 
 function App() {
-  const userData = { 
-    name: "Jane Doe", 
-    email: "jane.doe@example.com" 
+  const userData = {
+    name: "Jane Doe",
+    email: "jane.doe@example.com",
+    age: 28,
+    bio: "Software developer"
   };
 
   return (
