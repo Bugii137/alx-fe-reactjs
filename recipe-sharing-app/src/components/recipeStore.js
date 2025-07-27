@@ -1,48 +1,26 @@
-// src/components/recipeStore.js
 import { create } from 'zustand';
 
-export const useRecipeStore = create((set) => ({
+export const useRecipeStore = create(set => ({
   recipes: [],
-  searchTerm: '',
-  filteredRecipes: [],
-  
-  addRecipe: (newRecipe) =>
-    set((state) => ({
-      recipes: [...state.recipes, newRecipe],
-      filteredRecipes: [...state.recipes, newRecipe].filter((recipe) =>
-        recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
-      ),
+  favorites: [],
+  recommendations: [],
+
+  addFavorite: (recipeId) =>
+    set(state => ({
+      favorites: [...new Set([...state.favorites, recipeId])], // avoid duplicates
     })),
 
-  setSearchTerm: (term) =>
-    set((state) => {
-      const filtered = state.recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(term.toLowerCase())
-      );
-      return { searchTerm: term, filteredRecipes: filtered };
-    }),
+  removeFavorite: (recipeId) =>
+    set(state => ({
+      favorites: state.favorites.filter(id => id !== recipeId),
+    })),
 
-  updateRecipe: (updatedRecipe) =>
-    set((state) => {
-      const updated = state.recipes.map((recipe) =>
-        recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+  generateRecommendations: () =>
+    set(state => {
+      // Simple mock logic: recommend random favorites
+      const recommended = state.recipes.filter(recipe =>
+        state.favorites.includes(recipe.id) && Math.random() > 0.5
       );
-      return {
-        recipes: updated,
-        filteredRecipes: updated.filter((recipe) =>
-          recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
-        ),
-      };
-    }),
-
-  deleteRecipe: (id) =>
-    set((state) => {
-      const remaining = state.recipes.filter((recipe) => recipe.id !== id);
-      return {
-        recipes: remaining,
-        filteredRecipes: remaining.filter((recipe) =>
-          recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
-        ),
-      };
+      return { recommendations: recommended };
     }),
 }));
