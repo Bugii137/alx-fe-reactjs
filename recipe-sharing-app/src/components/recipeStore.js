@@ -7,10 +7,6 @@ export const useRecipeStore = create((set, get) => ({
   favorites: [],
   recommendations: [],
 
-  // Task 0: Required by the checker
-  setRecipes: (newRecipes) => set({ recipes: newRecipes }),
-
-  // Task 0 & 1
   addRecipe: (recipe) =>
     set((state) => ({
       recipes: [...state.recipes, { ...recipe, id: uuidv4() }],
@@ -21,14 +17,13 @@ export const useRecipeStore = create((set, get) => ({
       recipes: state.recipes.filter((r) => r.id !== id),
     })),
 
-  editRecipe: (updatedRecipe) =>
+  updateRecipe: (id, updatedFields) =>
     set((state) => ({
       recipes: state.recipes.map((r) =>
-        r.id === updatedRecipe.id ? updatedRecipe : r
+        r.id === id ? { ...r, ...updatedFields } : r
       ),
     })),
 
-  // Task 3: Favorites handling
   toggleFavorite: (id) =>
     set((state) => {
       const isFav = state.favorites.includes(id);
@@ -39,7 +34,6 @@ export const useRecipeStore = create((set, get) => ({
       };
     }),
 
-  // Task 3: Personalized Recommendations
   generateRecommendations: () => {
     const { recipes, favorites } = get();
     const favRecipes = recipes.filter((r) => favorites.includes(r.id));
@@ -54,7 +48,9 @@ export const useRecipeStore = create((set, get) => ({
     const recommendations = recipes.filter(
       (r) =>
         !favorites.includes(r.id) &&
-        r.ingredients?.some((ing) => favIngredients.has(ing.toLowerCase()))
+        r.ingredients?.some((ing) =>
+          favIngredients.has(ing.toLowerCase())
+        )
     );
 
     set({ recommendations });
