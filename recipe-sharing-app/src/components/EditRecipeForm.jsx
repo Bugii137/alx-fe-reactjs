@@ -12,7 +12,7 @@ const EditRecipeForm = () => {
   const [description, setDescription] = useState(recipe?.description || '');
 
   const handleSubmit = (event) => {
-    event.preventDefault(); // ✅ Required to pass the check
+    event.preventDefault();
 
     updateRecipe(id, { title, description });
     navigate(`/recipes/${id}`);
