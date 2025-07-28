@@ -1,25 +1,17 @@
-import React, { useEffect } from 'react';
-import useRecipeStore from '../store/recipeStore';
+import useRecipeStore from './recipeStore';
 
-const SearchBar = () => {
+function SearchBar() {
+  const searchTerm = useRecipeStore((state) => state.searchTerm);
   const setSearchTerm = useRecipeStore((state) => state.setSearchTerm);
-  const filterRecipes = useRecipeStore((state) => state.filterRecipes);
-
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  useEffect(() => {
-    filterRecipes();
-  }, [useRecipeStore((state) => state.searchTerm)]);
 
   return (
     <input
       type="text"
       placeholder="Search recipes..."
-      onChange={handleChange}
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
     />
   );
-};
+}
 
 export default SearchBar;

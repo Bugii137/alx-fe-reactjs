@@ -1,32 +1,31 @@
-import React, { useState } from 'react';
-import useRecipeStore from '../store/recipeStore';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import useRecipeStore from './recipeStore';
 
-const EditRecipeForm = ({ recipe }) => {
-  const [title, setTitle] = useState(recipe.title);
-  const [description, setDescription] = useState(recipe.description);
+function EditRecipeForm() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const recipe = useRecipeStore((state) =>
+    state.recipes.find((r) => r.id === parseInt(id))
+  );
   const updateRecipe = useRecipeStore((state) => state.updateRecipe);
+
+  const [title, setTitle] = useState(recipe?.title || '');
+  const [description, setDescription] = useState(recipe?.description || '');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateRecipe({ ...recipe, title, description });
-    alert('Recipe updated!');
+    updateRecipe(recipe.id, { title, description });
+    navigate(`/recipe/${recipe.id}`);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Edit Recipe</h3>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      ></textarea>
-      <button type="submit">Update</button>
+      <input value={title} onChange={(e) => setTitle(e.target.value)} required />
+      <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+      <button type="submit">Save</button>
     </form>
   );
-};
+}
 
 export default EditRecipeForm;
