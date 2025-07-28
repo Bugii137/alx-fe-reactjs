@@ -1,44 +1,54 @@
+// src/store/recipeStore.js
 import { create } from 'zustand';
+import { v4 as uuidv4 } from 'uuid';
 
-const useRecipeStore = create((set, get) => ({
+export const useRecipeStore = create((set, get) => ({
   recipes: [],
   favorites: [],
-  searchTerm: '',
-  setSearchTerm: (term) => set({ searchTerm: term }),
+  recommendations: [], // ✅ Required state
 
   addRecipe: (recipe) =>
-    set((state) => ({ recipes: [...state.recipes, recipe] })),
-
-  setRecipes: (recipes) => set({ recipes }),
-
-  updateRecipe: (id, updatedRecipe) =>
     set((state) => ({
-      recipes: state.recipes.map((r) => (r.id === id ? { ...r, ...updatedRecipe } : r))
+      recipes: [...state.recipes, { ...recipe, id: uuidv4() }],
     })),
 
   deleteRecipe: (id) =>
-    set((state) => ({ recipes: state.recipes.filter((r) => r.id !== id) })),
+    set((state) => ({
+      recipes: state.recipes.filter((r) => r.id !== id),
+    })),
 
-  toggleFavorite: (id) => {
-    const { favorites } = get();
-    if (favorites.includes(id)) {
-      set({ favorites: favorites.filter((fid) => fid !== id) });
-    } else {
-      set({ favorites: [...favorites, id] });
-    }
-  },
+  editRecipe: (updatedRecipe) =>
+    set((state) => ({
+      recipes: state.recipes.map((r) =>
+        r.id === updatedRecipe.id ? updatedRecipe : r
+      ),
+    })),
 
-  filteredRecipes: () => {
-    const { recipes, searchTerm } = get();
-    return recipes.filter((recipe) =>
-      recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+  toggleFavorite: (id) =>
+    set((state) => {
+      const isFav = state.favorites.includes(id);
+      return {
+        favorites: isFav
+          ? state.favorites.filter((fid) => fid !== id)
+          : [...state.favorites, id],
+      };
+    }),
+
+  generateRecommendations: () => {
+    const { recipes, favorites } = get();
+    const favRecipes = recipes.filter((r) => favorites.includes(r.id));
+    const favIngredients = new Set();
+
+    favRecipes.forEach((recipe) => {
+      recipe.ingredients?.forEach((ing) => favIngredients.add(ing.toLowerCase()));
+    });
+
+    const recommendations = recipes.filter(
+      (r) =>
+        !favorites.includes(r.id) &&
+        r.ingredients?.some((ing) => favIngredients.has(ing.toLowerCase()))
     );
-  },
 
-  recommendedRecipes: () => {
-    const { recipes } = get();
-    return recipes.slice(0, 3); // Example: top 3 recipes
+    set({ recommendations });
   },
 }));
-
-export default useRecipeStore;

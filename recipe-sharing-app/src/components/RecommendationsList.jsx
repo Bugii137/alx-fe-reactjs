@@ -1,25 +1,27 @@
-import React, { useEffect } from 'react';
-import useRecipeStore from '../store/recipeStore';
+// src/components/RecommendationList.jsx
+import { useEffect } from 'react';
+import { useRecipeStore } from '../store/recipeStore';
+import { Link } from 'react-router-dom';
 
-const RecommendationsList = () => {
-  const generateRecommendations = useRecipeStore((state) => state.generateRecommendations);
-  const recommendations = useRecipeStore((state) => state.recommendations);
+const RecommendationList = () => {
+  const { recommendations, generateRecommendations } = useRecipeStore();
 
   useEffect(() => {
-    generateRecommendations();
-  }, []);
+    generateRecommendations(); // Run on mount
+  }, [generateRecommendations]);
 
   return (
     <div>
-      <h2>Recommendations</h2>
-      {recommendations.map((recipe) => (
-        <div key={recipe.id}>
-          <h3>{recipe.title}</h3>
-          <p>{recipe.description}</p>
-        </div>
-      ))}
+      <h2>Recommended Recipes</h2>
+      <ul>
+        {recommendations.map((r) => (
+          <li key={r.id}>
+            <Link to={`/recipes/${r.id}`}>{r.title}</Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default RecommendationsList;
+export default RecommendationList;
