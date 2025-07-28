@@ -6,6 +6,7 @@ export const useRecipeStore = create((set, get) => ({
   recipes: [],
   favorites: [],
   recommendations: [],
+  searchTerm: '',
 
   addRecipe: (recipe) =>
     set((state) => ({
@@ -33,6 +34,11 @@ export const useRecipeStore = create((set, get) => ({
           : [...state.favorites, id],
       };
     }),
+
+  setSearchTerm: (term) =>
+    set(() => ({
+      searchTerm: term,
+    })),
 
   generateRecommendations: () => {
     const { recipes, favorites } = get();
