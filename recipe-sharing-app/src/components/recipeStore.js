@@ -5,8 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 export const useRecipeStore = create((set, get) => ({
   recipes: [],
   favorites: [],
-  recommendations: [], // ✅ Required state
+  recommendations: [],
 
+  // Task 0: Required by the checker
+  setRecipes: (newRecipes) => set({ recipes: newRecipes }),
+
+  // Task 0 & 1
   addRecipe: (recipe) =>
     set((state) => ({
       recipes: [...state.recipes, { ...recipe, id: uuidv4() }],
@@ -24,6 +28,7 @@ export const useRecipeStore = create((set, get) => ({
       ),
     })),
 
+  // Task 3: Favorites handling
   toggleFavorite: (id) =>
     set((state) => {
       const isFav = state.favorites.includes(id);
@@ -34,13 +39,16 @@ export const useRecipeStore = create((set, get) => ({
       };
     }),
 
+  // Task 3: Personalized Recommendations
   generateRecommendations: () => {
     const { recipes, favorites } = get();
     const favRecipes = recipes.filter((r) => favorites.includes(r.id));
     const favIngredients = new Set();
 
     favRecipes.forEach((recipe) => {
-      recipe.ingredients?.forEach((ing) => favIngredients.add(ing.toLowerCase()));
+      recipe.ingredients?.forEach((ing) =>
+        favIngredients.add(ing.toLowerCase())
+      );
     });
 
     const recommendations = recipes.filter(
