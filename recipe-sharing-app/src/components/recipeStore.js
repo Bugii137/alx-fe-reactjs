@@ -1,4 +1,3 @@
-// src/store/recipeStore.js
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,6 +6,8 @@ export const useRecipeStore = create((set, get) => ({
   favorites: [],
   recommendations: [],
   searchTerm: '',
+
+  setRecipes: (recipes) => set({ recipes }),
 
   addRecipe: (recipe) =>
     set((state) => ({
