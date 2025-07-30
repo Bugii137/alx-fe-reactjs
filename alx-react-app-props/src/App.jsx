@@ -1,7 +1,7 @@
 // src/App.jsx
-import React from "react";
-import { UserProvider } from "./userContext";
-import ProfilePage from "./components/ProfilePage";
+import React from 'react';
+import ProfilePage from './components/ProfilePage';
+import { UserProvider } from './userContext';
 
 function App() {
   return (
