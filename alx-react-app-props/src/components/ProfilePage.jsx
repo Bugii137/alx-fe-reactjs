@@ -1,14 +1,9 @@
-// src/components/ProfilePage.jsx
-import React from "react";
-import UserProfile from "./UserProfile";
+// src/ProfilePage.jsx
+import React from 'react';
+import UserInfo from './UserInfo';
 
-const ProfilePage = () => {
-  return (
-    <div>
-      <h1>Welcome to the Profile Page</h1>
-      <UserProfile />
-    </div>
-  );
-};
+function ProfilePage() {
+  return <UserInfo />;
+}
 
 export default ProfilePage;
