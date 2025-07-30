@@ -1,14 +1,12 @@
-import React from 'react';
-import { UserProvider } from './UserContext';
-import UserProfile from './UserProfile';
+// src/App.jsx
+import React from "react";
+import { UserProvider } from "./userContext";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   return (
     <UserProvider>
-      <div className="App">
-        <h1>Welcome to User Dashboard</h1>
-        <UserProfile />
-      </div>
+      <ProfilePage />
     </UserProvider>
   );
 }
