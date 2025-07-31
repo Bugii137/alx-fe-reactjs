@@ -1,61 +1,56 @@
-import { useState } from 'react';
-import { searchUsers } from '../services/githubService';
-import UserCard from './UserCard';
+import React, { useState } from 'react';
+import { fetchGitHubUsers } from '../services/githubService';
 
 const Search = () => {
-  const [query, setQuery] = useState('');
+  const [username, setUsername] = useState('');
   const [location, setLocation] = useState('');
   const [minRepos, setMinRepos] = useState('');
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
 
-  // ✅ Define fetchUserData as required
-  const fetchUserData = async (query, location, minRepos) => {
-    return await searchUsers({ query, location, minRepos });
+  const fetchUserData = async () => {
+    try {
+      const users = await fetchGitHubUsers(username, location, minRepos);
+      setResults(users);
+      setError('');
+    } catch (err) {
+      setError('Error fetching users');
+      setResults([]);
+    }
   };
 
-  const handleSearch = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    const users = await fetchUserData(query, location, minRepos);
-
-    if (users.length === 0) {
-      setError("Looks like we can't find the user");
-    } else {
-      setError('');
-    }
-    setResults(users);
+    fetchUserData();
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">GitHub User Search</h1>
-      <form onSubmit={handleSearch} className="space-y-4">
+    <div className="max-w-xl mx-auto mt-8 p-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="text"
-          placeholder="Username"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
+          placeholder="Search by username"
+          className="border rounded p-2"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="text"
-          placeholder="Location (optional)"
+          placeholder="Filter by location"
+          className="border rounded p-2"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full p-2 border rounded"
         />
         <input
           type="number"
-          placeholder="Minimum Repos (optional)"
+          placeholder="Minimum repositories"
+          className="border rounded p-2"
           value={minRepos}
           onChange={(e) => setMinRepos(e.target.value)}
-          className="w-full p-2 border rounded"
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
           Search
         </button>
@@ -63,10 +58,35 @@ const Search = () => {
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
-      <div className="mt-6 space-y-4">
-        {results.map((user) => (
-          <UserCard key={user.id} user={user} />
-        ))}
+      <div className="mt-6">
+        {results.length > 0 ? (
+          <ul className="space-y-4">
+            {results.map((user) => (
+              <li key={user.id} className="border p-4 rounded shadow-sm">
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={user.avatar_url}
+                    alt={user.login}
+                    className="w-12 h-12 rounded-full"
+                  />
+                  <div>
+                    <p className="font-semibold">{user.login}</p>
+                    <a
+                      href={user.html_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-600 underline text-sm"
+                    >
+                      View Profile
+                    </a>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4">Looks like we can't find the user</p>
+        )}
       </div>
     </div>
   );

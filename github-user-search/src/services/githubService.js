@@ -1,20 +1,15 @@
-// src/services/githubService.js
-import axios from 'axios';
+export const fetchGitHubUsers = async (username, location, minRepos) => {
+  let query = `${username ? `${username} in:login` : ''}`;
+  if (location) query += ` location:${location}`;
+  if (minRepos) query += ` repos:>=${minRepos}`;
 
-export const searchUsers = async ({ query, location, minRepos }) => {
-  try {
-    let searchQuery = `${query}`;
-    if (location) {
-      searchQuery += `+location:${location}`;
-    }
-    if (minRepos) {
-      searchQuery += `+repos:>${minRepos}`;
-    }
+  const url = `https://api.github.com/search/users?q=${encodeURIComponent(query)}`;
 
-    const response = await axios.get(`https://api.github.com/search/users?q=${searchQuery}`);
-    return response.data.items;
-  } catch (error) {
-    console.error('GitHub API error:', error);
-    return [];
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch users");
   }
+
+  const data = await response.json();
+  return data.items || [];
 };

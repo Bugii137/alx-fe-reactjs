@@ -1,10 +1,11 @@
 import React from 'react';
+import Search from './components/Search';
 
 function App() {
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>GitHub User Search</h1>
-      <p>This is the base layout. More features coming soon.</p>
+    <div className="min-h-screen bg-gray-100">
+      <h1 className="text-3xl font-bold text-center pt-10">GitHub User Search</h1>
+      <Search />
     </div>
   );
 }
