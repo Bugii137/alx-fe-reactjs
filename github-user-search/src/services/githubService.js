@@ -1,20 +1,20 @@
+// src/services/githubService.js
 import axios from 'axios';
 
-const BASE_URL = 'https://api.github.com/search/users';
-
-export async function searchUsers(username = '', location = '', repos = '') {
-  let query = '';
-
-  if (username) query += `${username} in:login`;
-  if (location) query += ` location:${location}`;
-  if (repos) query += ` repos:>=${repos}`;
-
-  const url = `${BASE_URL}?q=${encodeURIComponent(query)}`;
-
+export const searchUsers = async ({ query, location, minRepos }) => {
   try {
-    const response = await axios.get(url);
+    let searchQuery = `${query}`;
+    if (location) {
+      searchQuery += `+location:${location}`;
+    }
+    if (minRepos) {
+      searchQuery += `+repos:>${minRepos}`;
+    }
+
+    const response = await axios.get(`https://api.github.com/search/users?q=${searchQuery}`);
     return response.data.items;
   } catch (error) {
-    throw error;
+    console.error('GitHub API error:', error);
+    return [];
   }
-}
+};
