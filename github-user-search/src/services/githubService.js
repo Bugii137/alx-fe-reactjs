@@ -1,13 +1,19 @@
 import axios from 'axios';
 
-// GitHub API base URL
-const BASE_URL = 'https://api.github.com';
+const BASE_URL = 'https://api.github.com/search/users';
 
-// Named export - required by checker
-export async function fetchUserData(username) {
+export async function searchUsers(username = '', location = '', repos = '') {
+  let query = '';
+
+  if (username) query += `${username} in:login`;
+  if (location) query += ` location:${location}`;
+  if (repos) query += ` repos:>=${repos}`;
+
+  const url = `${BASE_URL}?q=${encodeURIComponent(query)}`;
+
   try {
-    const response = await axios.get(`${BASE_URL}/users/${username}`);
-    return response.data;
+    const response = await axios.get(url);
+    return response.data.items;
   } catch (error) {
     throw error;
   }
