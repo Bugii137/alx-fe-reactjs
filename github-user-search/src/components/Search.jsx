@@ -1,84 +1,71 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { searchUsers } from '../services/githubService';
+import UserCard from './UserCard';
 
 const Search = () => {
-  const [form, setForm] = useState({
-    username: '',
-    location: '',
-    repos: ''
-  });
+  const [query, setQuery] = useState('');
+  const [location, setLocation] = useState('');
+  const [minRepos, setMinRepos] = useState('');
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // ✅ Define fetchUserData as required
+  const fetchUserData = async (query, location, minRepos) => {
+    return await searchUsers({ query, location, minRepos });
   };
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-    setResults([]);
 
-    try {
-      const users = await searchUsers(form.username, form.location, form.repos);
-      setResults(users);
-    } catch (err) {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
+    const users = await fetchUserData(query, location, minRepos);
+
+    if (users.length === 0) {
+      setError("Looks like we can't find the user");
+    } else {
+      setError('');
     }
+    setResults(users);
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">GitHub User Search</h1>
-
-      <form onSubmit={handleSearch} className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
+      <h1 className="text-2xl font-bold mb-4">GitHub User Search</h1>
+      <form onSubmit={handleSearch} className="space-y-4">
         <input
           type="text"
-          name="username"
           placeholder="Username"
-          value={form.username}
-          onChange={handleChange}
-          className="border p-2 rounded"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full p-2 border rounded"
+          required
         />
         <input
           type="text"
-          name="location"
-          placeholder="Location"
-          value={form.location}
-          onChange={handleChange}
-          className="border p-2 rounded"
+          placeholder="Location (optional)"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="w-full p-2 border rounded"
         />
         <input
           type="number"
-          name="repos"
-          placeholder="Min Repositories"
-          value={form.repos}
-          onChange={handleChange}
-          className="border p-2 rounded"
+          placeholder="Minimum Repos (optional)"
+          value={minRepos}
+          onChange={(e) => setMinRepos(e.target.value)}
+          className="w-full p-2 border rounded"
         />
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded md:col-span-3">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
           Search
         </button>
       </form>
 
-      {loading && <p className="mt-4 text-center">Loading...</p>}
-      {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
 
-      <div className="mt-6 grid gap-4">
+      <div className="mt-6 space-y-4">
         {results.map((user) => (
-          <div key={user.id} className="border p-4 rounded flex items-center gap-4">
-            <img src={user.avatar_url} alt={user.login} className="w-16 h-16 rounded-full" />
-            <div>
-              <h3 className="font-semibold">{user.login}</h3>
-              <a href={user.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-500">
-                View Profile
-              </a>
-            </div>
-          </div>
+          <UserCard key={user.id} user={user} />
         ))}
       </div>
     </div>
