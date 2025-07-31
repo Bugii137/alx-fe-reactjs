@@ -1,93 +1,87 @@
 import React, { useState } from 'react';
-import { fetchGitHubUsers } from '../services/githubService';
+import { fetchUserData } from '../services/githubService';
 
 const Search = () => {
   const [username, setUsername] = useState('');
   const [location, setLocation] = useState('');
   const [minRepos, setMinRepos] = useState('');
-  const [results, setResults] = useState([]);
-  const [error, setError] = useState('');
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const fetchUserData = async () => {
-    try {
-      const users = await fetchGitHubUsers(username, location, minRepos);
-      setResults(users);
-      setError('');
-    } catch (err) {
-      setError('Error fetching users');
-      setResults([]);
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    fetchUserData();
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchUserData(username, location, minRepos);
+      setUsers(data);
+    } catch (err) {
+      setError('Failed to fetch users');
+    }
+    setLoading(false);
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-8 p-4">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div className="p-6 max-w-xl mx-auto">
+      <form onSubmit={handleSearch} className="space-y-4">
         <input
           type="text"
-          placeholder="Search by username"
-          className="border rounded p-2"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+          className="w-full p-2 border rounded"
+          required
         />
         <input
           type="text"
-          placeholder="Filter by location"
-          className="border rounded p-2"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
+          placeholder="Location (optional)"
+          className="w-full p-2 border rounded"
         />
         <input
           type="number"
-          placeholder="Minimum repositories"
-          className="border rounded p-2"
           value={minRepos}
           onChange={(e) => setMinRepos(e.target.value)}
+          placeholder="Min Repos (optional)"
+          className="w-full p-2 border rounded"
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
           Search
         </button>
       </form>
 
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {loading && <p className="mt-4 text-center">Loading...</p>}
+      {error && <p className="mt-4 text-center text-red-500">{error}</p>}
 
-      <div className="mt-6">
-        {results.length > 0 ? (
-          <ul className="space-y-4">
-            {results.map((user) => (
-              <li key={user.id} className="border p-4 rounded shadow-sm">
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={user.avatar_url}
-                    alt={user.login}
-                    className="w-12 h-12 rounded-full"
-                  />
-                  <div>
-                    <p className="font-semibold">{user.login}</p>
-                    <a
-                      href={user.html_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-600 underline text-sm"
-                    >
-                      View Profile
-                    </a>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-4">Looks like we can't find the user</p>
-        )}
-      </div>
+      <ul className="mt-6 space-y-4">
+        {users.map((user) => (
+          <li key={user.id} className="p-4 border rounded shadow">
+            <div className="flex items-center space-x-4">
+              <img
+                src={user.avatar_url}
+                alt={user.login}
+                className="w-12 h-12 rounded-full"
+              />
+              <div>
+                <p className="font-semibold">{user.login}</p>
+                <a
+                  href={user.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  View Profile
+                </a>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

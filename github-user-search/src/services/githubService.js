@@ -1,15 +1,15 @@
-export const fetchGitHubUsers = async (username, location, minRepos) => {
-  let query = `${username ? `${username} in:login` : ''}`;
-  if (location) query += ` location:${location}`;
-  if (minRepos) query += ` repos:>=${minRepos}`;
+import axios from 'axios';
 
-  const url = `https://api.github.com/search/users?q=${encodeURIComponent(query)}`;
+export const fetchUserData = async (username, location = '', minRepos = '') => {
+  try {
+    let query = `${username}`;
+    if (location) query += `+location:${location}`;
+    if (minRepos) query += `+repos:>=${minRepos}`;
 
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("Failed to fetch users");
+    const response = await axios.get(`https://api.github.com/search/users?q=${query}`);
+    return response.data.items;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data.items || [];
 };
