@@ -3,24 +3,29 @@ import { useState } from "react";
 function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
-  const [steps, setSteps] = useState(""); // renamed from instructions
+  const [steps, setSteps] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  // Separate validation function
+  const validate = () => {
     const newErrors = {};
     if (!title.trim()) newErrors.title = "Title is required";
     if (!ingredients.trim()) newErrors.ingredients = "Ingredients are required";
     if (!steps.trim()) newErrors.steps = "Steps are required";
+    return newErrors;
+  };
 
-    setErrors(newErrors);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    if (Object.keys(newErrors).length === 0) {
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
       const newRecipe = {
         title,
         ingredients: ingredients.split(",").map((i) => i.trim()),
-        steps: steps.split("\n").map((i) => i.trim()), // renamed
+        steps: steps.split("\n").map((i) => i.trim()),
       };
 
       console.log("New Recipe Submitted:", newRecipe);
