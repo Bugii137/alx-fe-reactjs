@@ -12,23 +12,29 @@ function RecipeDetail() {
         const found = data.find((r) => r.id === parseInt(id));
         setRecipe(found);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error loading recipe:", err));
   }, [id]);
 
-  if (!recipe) return <p className="text-center mt-8">Loading...</p>;
+  if (!recipe)
+    return <p className="text-center mt-8 text-gray-700">Loading...</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <Link to="/" className="text-blue-500 hover:underline mb-4 inline-block">
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-md">
+      <Link
+        to="/"
+        className="text-blue-500 hover:underline mb-4 inline-block"
+      >
         ← Back to Home
       </Link>
 
       <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
+
       <img
         src={recipe.image}
         alt={recipe.title}
-        className="w-full h-64 object-cover rounded-2xl mb-6"
+        className="w-full h-64 object-cover rounded-2xl mb-6 shadow"
       />
+
       <p className="text-gray-700 mb-6">{recipe.summary}</p>
 
       <div className="mb-6">
@@ -42,12 +48,13 @@ function RecipeDetail() {
 
       <div>
         <h2 className="text-2xl font-semibold mb-2">Cooking Instructions</h2>
-<ol className="list-decimal list-inside text-gray-700">
-  {recipe.instructions.map((step, idx) => (
-    <li key={idx} className="mb-2">{step}</li>
-  ))}
-</ol>
-
+        <ol className="list-decimal list-inside text-gray-700">
+          {recipe.instructions.map((step, idx) => (
+            <li key={idx} className="mb-2">
+              {step}
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );
