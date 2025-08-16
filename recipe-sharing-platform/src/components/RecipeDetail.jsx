@@ -41,12 +41,13 @@ function RecipeDetail() {
       </div>
 
       <div>
-        <h2 className="text-2xl font-semibold mb-2">Cooking Steps</h2>
-        <ol className="list-decimal list-inside text-gray-700">
-          {recipe.steps.map((step, idx) => (
-            <li key={idx} className="mb-2">{step}</li>
-          ))}
-        </ol>
+        <h2 className="text-2xl font-semibold mb-2">Cooking Instructions</h2>
+<ol className="list-decimal list-inside text-gray-700">
+  {recipe.instructions.map((step, idx) => (
+    <li key={idx} className="mb-2">{step}</li>
+  ))}
+</ol>
+
       </div>
     </div>
   );

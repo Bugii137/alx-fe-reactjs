@@ -11,34 +11,13 @@
       "50g pecorino cheese",
       "Black pepper"
     ],
-    "steps": [
+    "instructions": [
       "Cook spaghetti in salted water until al dente.",
       "Fry pancetta until crisp.",
       "Beat eggs and mix with cheese.",
       "Combine spaghetti with pancetta and remove from heat.",
       "Quickly stir in egg and cheese mixture.",
       "Serve immediately with black pepper."
-    ]
-  },
-  {
-    "id": 2,
-    "title": "Chicken Tikka Masala",
-    "summary": "Chunks of grilled chicken (tikka) cooked in a smooth buttery & creamy tomato based gravy.",
-    "image": "https://via.placeholder.com/300x200",
-    "ingredients": [
-      "500g chicken breast",
-      "200g yogurt",
-      "2 tbsp garam masala",
-      "1 onion",
-      "200ml tomato puree",
-      "50ml cream"
-    ],
-    "steps": [
-      "Marinate chicken in yogurt and spices for 2 hours.",
-      "Grill or pan-fry chicken until cooked.",
-      "Sauté onions and add tomato puree.",
-      "Add cooked chicken and simmer.",
-      "Stir in cream and garnish with coriander."
     ]
   }
 ]
