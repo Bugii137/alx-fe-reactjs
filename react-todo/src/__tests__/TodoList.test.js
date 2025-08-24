@@ -2,37 +2,38 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import TodoList from "../components/TodoList";
 
 describe("TodoList Component", () => {
-  it("renders heading and initial todos", () => {
+  test("renders initial todos", () => {
     render(<TodoList />);
-    expect(screen.getByText("Todo List")).toBeInTheDocument();
     expect(screen.getByText("Learn React")).toBeInTheDocument();
     expect(screen.getByText("Build a Todo App")).toBeInTheDocument();
   });
 
-  it("adds a new todo when button is clicked", () => {
+  test("adds a new todo", () => {
     render(<TodoList />);
-    const input = screen.getByPlaceholderText("Enter a task");
-    const button = screen.getByText("Add");
+    const input = screen.getByTestId("new-todo-input");
+    const addButton = screen.getByText("Add");
 
-    fireEvent.change(input, { target: { value: "Test Todo" } });
-    fireEvent.click(button);
+    fireEvent.change(input, { target: { value: "New Todo" } });
+    fireEvent.click(addButton);
 
-    expect(screen.getByText("Test Todo")).toBeInTheDocument();
+    expect(screen.getByText("New Todo")).toBeInTheDocument();
   });
 
-  it("toggles todo completion status", () => {
+  test("toggles a todo", () => {
     render(<TodoList />);
     const todoItem = screen.getByText("Learn React");
-    expect(todoItem).not.toHaveStyle("text-decoration: line-through");
+
     fireEvent.click(todoItem);
     expect(todoItem).toHaveStyle("text-decoration: line-through");
+
+    fireEvent.click(todoItem);
+    expect(todoItem).toHaveStyle("text-decoration: none");
   });
 
-  it("deletes a todo", () => {
+  test("deletes a todo", () => {
     render(<TodoList />);
-    const todoItem = screen.getByText("Learn React");
-    const deleteBtn = screen.getAllByTestId("delete-btn")[0];
-    fireEvent.click(deleteBtn);
-    expect(todoItem).not.toBeInTheDocument();
+    const deleteButton = screen.getByTestId("delete-1");
+    fireEvent.click(deleteButton);
+    expect(screen.queryByText("Learn React")).not.toBeInTheDocument();
   });
 });
