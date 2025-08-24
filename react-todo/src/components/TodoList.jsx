@@ -1,31 +1,35 @@
-import { useState } from "react";
+// src/components/TodoList.jsx
+import React, { useState } from "react";
 
-function TodoList() {
+const TodoList = () => {
   const [todos, setTodos] = useState([
-    { id: 1, text: "Learn React", completed: false },
-    { id: 2, text: "Build a Todo App", completed: true },
+    { text: "Learn React", completed: false },
+    { text: "Build a Todo App", completed: false },
   ]);
 
   const [newTodo, setNewTodo] = useState("");
 
+  // Add new todo
   const addTodo = (e) => {
     e.preventDefault();
-    if (!newTodo.trim()) return;
-    const todo = { id: Date.now(), text: newTodo, completed: false };
-    setTodos([...todos, todo]);
+    if (newTodo.trim() === "") return;
+
+    setTodos([...todos, { text: newTodo, completed: false }]);
     setNewTodo("");
   };
 
-  const toggleTodo = (id) => {
+  // Toggle todo completion
+  const toggleTodo = (index) => {
     setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      todos.map((todo, i) =>
+        i === index ? { ...todo, completed: !todo.completed } : todo
       )
     );
   };
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  // Delete todo
+  const deleteTodo = (index) => {
+    setTodos(todos.filter((_, i) => i !== index));
   };
 
   return (
@@ -33,30 +37,35 @@ function TodoList() {
       <h1>Todo List</h1>
       <form onSubmit={addTodo}>
         <input
+          type="text"
+          placeholder="Add new todo"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Add new todo"
         />
         <button type="submit">Add</button>
       </form>
-
       <ul>
-        {todos.map((todo) => (
+        {todos.map((todo, index) => (
           <li
-            key={todo.id}
+            key={index}
             style={{
               textDecoration: todo.completed ? "line-through" : "none",
               cursor: "pointer",
             }}
-            onClick={() => toggleTodo(todo.id)}
+            onClick={() => toggleTodo(index)}
           >
             {todo.text}{" "}
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+            <button onClick={(e) => {
+              e.stopPropagation(); // prevent toggle when deleting
+              deleteTodo(index);
+            }}>
+              Delete
+            </button>
           </li>
         ))}
       </ul>
     </div>
   );
-}
+};
 
 export default TodoList;
