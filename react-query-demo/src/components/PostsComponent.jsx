@@ -1,3 +1,5 @@
+// src/components/PostsComponent.jsx
+import React from "react";
 import { useQuery } from "react-query";
 
 const fetchPosts = async () => {
@@ -8,38 +10,44 @@ const fetchPosts = async () => {
   return res.json();
 };
 
-export default function PostsComponent() {
+function PostsComponent() {
   const {
     data,
+    error,
     isLoading,
     isError,
-    error,
-    isFetching,
     refetch,
+    isFetching,
   } = useQuery("posts", fetchPosts, {
-    keepPreviousData: true,
+    // Advanced React Query options
+    cacheTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 30, // 30 seconds
+    refetchOnWindowFocus: true, // refetch when tab regains focus
   });
 
-  if (isLoading) return <p>Loading posts…</p>;
-  if (isError) return <p>Error: {String(error?.message || error)}</p>;
+  if (isLoading) return <p>Loading posts...</p>;
+  if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 12 }}>
-        <button onClick={() => refetch()}>Refetch</button>
-        {isFetching ? <span>Updating…</span> : <span>Up to date</span>}
-      </div>
-
-      <ul>
+      <h2 className="text-xl font-bold mb-4">Posts</h2>
+      <button
+        onClick={() => refetch()}
+        disabled={isFetching}
+        className="px-4 py-2 bg-blue-500 text-white rounded mb-4"
+      >
+        {isFetching ? "Refreshing..." : "Refetch Posts"}
+      </button>
+      <ul className="list-disc pl-5">
         {data.slice(0, 10).map((post) => (
-          <li key={post.id} style={{ marginBottom: 8 }}>
-            <strong>#{post.id}</strong> — {post.title}
+          <li key={post.id} className="mb-2">
+            <strong>{post.title}</strong>
+            <p>{post.body}</p>
           </li>
         ))}
       </ul>
-      <p style={{ marginTop: 12, fontStyle: "italic" }}>
-        Tip: Click “Hide Posts” in App, then “Show Posts” again — data should appear instantly from cache (if within stale/cache times).
-      </p>
     </div>
   );
 }
+
+export default PostsComponent;
