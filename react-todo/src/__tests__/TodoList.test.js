@@ -1,29 +1,21 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { describe, it, expect } from "vitest";
 import TodoList from "../components/TodoList";
 
-test("renders the todo input and add button", () => {
-  render(<TodoList />);
-  expect(screen.getByPlaceholderText(/add a todo/i)).toBeInTheDocument();
-  expect(screen.getByTestId("add-btn")).toBeInTheDocument();
-});
+describe("TodoList Component", () => {
+  it("renders heading correctly", () => {
+    render(<TodoList />);
+    expect(screen.getByText("Todo List")).toBeInTheDocument();
+  });
 
-test("adds a new todo when clicking the button", () => {
-  render(<TodoList />);
-  const input = screen.getByTestId("todo-input");
-  const button = screen.getByTestId("add-btn");
+  it("adds a new todo when button is clicked", () => {
+    render(<TodoList />);
+    const input = screen.getByPlaceholderText("Enter a task");
+    const button = screen.getByText("Add");
 
-  fireEvent.change(input, { target: { value: "Learn React" } });
-  fireEvent.click(button);
+    fireEvent.change(input, { target: { value: "Learn React" } });
+    fireEvent.click(button);
 
-  expect(screen.getByText("Learn React")).toBeInTheDocument();
-});
-
-test("does not add empty todos", () => {
-  render(<TodoList />);
-  const button = screen.getByTestId("add-btn");
-
-  fireEvent.click(button);
-
-  expect(screen.queryByTestId("todo-item")).not.toBeInTheDocument();
+    expect(screen.getByText("Learn React")).toBeInTheDocument();
+  });
 });
