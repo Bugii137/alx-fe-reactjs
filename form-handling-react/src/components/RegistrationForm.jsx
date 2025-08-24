@@ -1,32 +1,22 @@
 import { useState } from "react";
 
 function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Basic validation
-    if (!formData.username || !formData.email || !formData.password) {
+    if (!username || !email || !password) {
       setError("All fields are required!");
       return;
     }
 
     setError("");
-    console.log("Submitting:", formData);
+    console.log("Submitting:", { username, email, password });
 
     // Mock API simulation
     alert("User registered successfully!");
@@ -45,9 +35,8 @@ function RegistrationForm() {
         <label className="block">Username</label>
         <input
           type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="border px-2 py-1 w-full"
         />
       </div>
@@ -56,9 +45,8 @@ function RegistrationForm() {
         <label className="block">Email</label>
         <input
           type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="border px-2 py-1 w-full"
         />
       </div>
@@ -67,9 +55,8 @@ function RegistrationForm() {
         <label className="block">Password</label>
         <input
           type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="border px-2 py-1 w-full"
         />
       </div>
