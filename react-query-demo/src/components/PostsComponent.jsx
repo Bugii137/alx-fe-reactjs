@@ -1,9 +1,11 @@
 // src/components/PostsComponent.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 
-const fetchPosts = async () => {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+const fetchPosts = async (page) => {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=5`
+  );
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
@@ -11,6 +13,8 @@ const fetchPosts = async () => {
 };
 
 function PostsComponent() {
+  const [page, setPage] = useState(1);
+
   const {
     data,
     error,
@@ -18,11 +22,12 @@ function PostsComponent() {
     isError,
     refetch,
     isFetching,
-  } = useQuery("posts", fetchPosts, {
+  } = useQuery(["posts", page], () => fetchPosts(page), {
     // Advanced React Query options
     cacheTime: 1000 * 60 * 5, // 5 minutes
     staleTime: 1000 * 30, // 30 seconds
-    refetchOnWindowFocus: true, // refetch when tab regains focus
+    refetchOnWindowFocus: true, // refetch on focus
+    keepPreviousData: true, // <-- keep old data while fetching new
   });
 
   if (isLoading) return <p>Loading posts...</p>;
@@ -30,7 +35,7 @@ function PostsComponent() {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Posts</h2>
+      <h2 className="text-xl font-bold mb-4">Posts (Page {page})</h2>
       <button
         onClick={() => refetch()}
         disabled={isFetching}
@@ -38,14 +43,32 @@ function PostsComponent() {
       >
         {isFetching ? "Refreshing..." : "Refetch Posts"}
       </button>
+
       <ul className="list-disc pl-5">
-        {data.slice(0, 10).map((post) => (
+        {data.map((post) => (
           <li key={post.id} className="mb-2">
             <strong>{post.title}</strong>
             <p>{post.body}</p>
           </li>
         ))}
       </ul>
+
+      {/* Pagination */}
+      <div className="flex gap-4 mt-4">
+        <button
+          onClick={() => setPage((old) => Math.max(old - 1, 1))}
+          disabled={page === 1}
+          className="px-3 py-1 bg-gray-500 text-white rounded"
+        >
+          Previous
+        </button>
+        <button
+          onClick={() => setPage((old) => old + 1)}
+          className="px-3 py-1 bg-gray-500 text-white rounded"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
