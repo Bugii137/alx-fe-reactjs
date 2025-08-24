@@ -1,8 +1,7 @@
 {
   "jest": {
-  "testEnvironment": "jsdom"
-}
-
+    "testEnvironment": "jsdom"
+  },
   "name": "react-todo",
   "private": true,
   "version": "0.0.0",
@@ -14,8 +13,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "formik": "^2.4.6",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -32,5 +33,4 @@
     "jest": "^30.0.5",
     "vite": "^7.1.2"
   }
-  
 }
