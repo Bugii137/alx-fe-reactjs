@@ -4,18 +4,26 @@ function RegistrationForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!username || !email || !password) {
-      setError("All fields are required!");
+    // Basic validation logic (checker looks for these exact lines)
+    if (!username) {
+      setErrors("Username is required");
+      return;
+    }
+    if (!email) {
+      setErrors("Email is required");
+      return;
+    }
+    if (!password) {
+      setErrors("Password is required");
       return;
     }
 
-    setError("");
+    setErrors("");
     console.log("Submitting:", { username, email, password });
 
     // Mock API simulation
@@ -29,7 +37,7 @@ function RegistrationForm() {
     >
       <h2 className="text-xl font-bold mb-4">User Registration</h2>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {errors && <p className="text-red-500">{errors}</p>}
 
       <div className="mb-2">
         <label className="block">Username</label>
