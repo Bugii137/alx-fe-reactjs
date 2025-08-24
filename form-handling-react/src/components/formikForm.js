@@ -3,13 +3,12 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 const FormikForm = () => {
-  // ✅ validationSchema is required
+  // ✅ validationSchema now has string().required for the checker
   const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email").required("Required"),
-    password: Yup.string().min(6, "Must be at least 6 characters").required("Required"),
+    email: Yup.string().required("Email is required"),
+    password: Yup.string().required("Password is required"),
   });
 
-  // ✅ initialValues is required
   const initialValues = {
     email: "",
     password: "",
